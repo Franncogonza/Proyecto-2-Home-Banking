@@ -1,7 +1,7 @@
 //Declaración de variables  
 
 var nombreUsuario = "Franco Gonzalez";
-var saldoCuenta = 300000;
+var saldoCuenta = 30;
 var limiteExtraccion = 5000;
 
 //Declaración de variables que contienen precio de los servicios
@@ -30,8 +30,12 @@ var sumaDinero = function (monto) {
 
 //Resta dinero a saldoCuenta
 var restaDinero = function (monto) {
-    saldoAnterior = saldoCuenta;
-    saldoCuenta = saldoAnterior - monto;
+    if (monto <= saldoCuenta) {
+        saldoAnterior = saldoCuenta;
+        saldoCuenta = saldoAnterior - monto;
+    } else {
+        return false;
+    }
 }
 
 //Muestra un alert después de hacer un depósito
@@ -54,7 +58,6 @@ function haySaldoDisponible(monto) {
     if (monto <= saldoCuenta) {
         return true;
     } else {
-        alert("No hay saldo disponible en tu cuenta para extraer esa cantidad de dinero");
         return false;
     }
 }
@@ -97,7 +100,7 @@ function extraerDinero() {
         actualizarSaldoEnPantalla();
         alertExtraccion(monto, saldoAnterior, saldoCuenta);
     } else {
-        return false;
+        alert("No hay saldo disponible");
     }
 }
 
@@ -112,35 +115,49 @@ function depositarDinero() {
 
 
 function pagarServicio() {
-    
+
     // El usuario debe elegir el servicio que quiere pagar, ese valor se almcena en servicio y entra al switch
-    var servicio = prompt("Que servicio desea abonar?"+'\n'+
-    "1. "+s1[0]+": $"+s1[1]+'\n'+
-    "2. "+s2[0]+": $"+s2[1]+'\n'+
-    "3. "+s3[0]+": $"+s3[1]+'\n'+
-    "4. "+s4[0]+": $"+s4[1]+'\n'+
-    "Ingrese el numero correspondiente al servicio que desea abonar");
+    var servicio = prompt("Que servicio desea abonar?" + '\n' +
+        "1. " + s1[0] + ": $" + s1[1] + '\n' +
+        "2. " + s2[0] + ": $" + s2[1] + '\n' +
+        "3. " + s3[0] + ": $" + s3[1] + '\n' +
+        "4. " + s4[0] + ": $" + s4[1] + '\n' +
+        "Ingrese el numero del servicio que desea abonar");
 
- //devuelve true o false segun servicio que eligió el usuario
-   switch (servicio) {
-    case "1":
-        servicio = s1;
-        break;
-    case "2":
-        servicio = s2;
-        break;
-    case "3":
-        servicio = s3;
-        break;
-    case "4":
-        servicio = s4;
-        break ; 
-    default:
-        alert("Intente con un servicio valido");
-        return false;
+    //devuelve true o false segun servicio que eligió el usuario
+    switch (servicio) {
+        case "1":
+            servicio = s1;
+            break;
+        case "2":
+            servicio = s2;
+            break;
+        case "3":
+            servicio = s3;
+            break;
+        case "4":
+            servicio = s4;
+            break;
+        default:
+            alert("Intente con un servicio valido");
+            return false;
+    }
+
+    monto = servicio[1];
+
+    if (haySaldoDisponible(monto)) {
+        restaDinero(monto);
+        alert("Pagaste el siguiente servicio: " + servicio[0] + "." + "\n"
+            + "Saldo anterior: $" + saldoAnterior + "\n"
+            + "Dinero descontado: $" + servicio[1] + "\n"
+            + "Saldo actual: $" + saldoCuenta);
+
+        actualizarSaldoEnPantalla();
+    } else {
+        alert("No hay saldo disponible");
+    }
 }
 
-}
 
 function transferirDinero() {
 
