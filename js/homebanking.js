@@ -1,7 +1,7 @@
 //Declaración de variables  
 
 var nombreUsuario = "Franco Gonzalez";
-var saldoCuenta = 30;
+var saldoCuenta = 30000;
 var limiteExtraccion = 5000;
 
 //Declaración de variables que contienen precio de los servicios
