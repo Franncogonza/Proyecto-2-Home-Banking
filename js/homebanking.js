@@ -3,18 +3,21 @@
 var nombreUsuario = "Franco Gonzalez";
 var saldoCuenta = 30000;
 var limiteExtraccion = 5000;
-
+var codigoDeSeguridad = 1234;
 //Declaración de variables que contienen precio de los servicios
 var s1 = ["Agua", 350];
 var s2 = ["Luz", 425];
 var s3 = ["Internet", 210];
 var s4 = ["Telefono", 570];
 
-
+//Declaración de variables que contienen nombre y numero de cuenta amiga
+var cta1 = ["Cuenta Amiga1", "1234567"];
+var cta2 = ["Cuenta Amiga2", "7654321"];
 
 
 //Ejecución de las funciones que actualizan los valores de las variables en el HTML.
 window.onload = function () {
+    iniciarSesion();
     cargarNombreEnPantalla();
     actualizarSaldoEnPantalla();
     actualizarLimiteEnPantalla();
@@ -124,7 +127,7 @@ function pagarServicio() {
         "4. " + s4[0] + ": $" + s4[1] + '\n' +
         "Ingrese el numero del servicio que desea abonar");
 
-    //devuelve true o false segun servicio que eligió el usuario
+    //si el servicio existe devuelve true sino retorna false
     switch (servicio) {
         case "1":
             servicio = s1;
@@ -142,9 +145,9 @@ function pagarServicio() {
             alert("Intente con un servicio valido");
             return false;
     }
-
+    // asigno  a la variable monto el valor de la variable servicio posicion 1
     monto = servicio[1];
-
+   //compruebo que haya saldo suficiente, si es true, ejecuta las funciones, muestra el alert y actualiza
     if (haySaldoDisponible(monto)) {
         restaDinero(monto);
         alert("Pagaste el siguiente servicio: " + servicio[0] + "." + "\n"
@@ -160,12 +163,53 @@ function pagarServicio() {
 
 
 function transferirDinero() {
+    //Aca se ingresa el monto a trasnferir y se guarda en la variable monto
+    var monto = parseInt(prompt("Ingrese el importe a transferir"));
+    // Compruebo si tengo dinero suficiente con el if, si da true, pregunto a a que cuenta va a trasnferir el dinero
+    if (haySaldoDisponible(monto)) {
+        cuentaAmiga = prompt("A qué cuenta amiga desea trasnferir el dinero" + "\n" +
+            "1. " + cta1[0] + ": " + cta1[1] + "\n" +
+            "2. " + cta2[0] + ": " + cta2[1] + "\n" +
+            "Ingrese el numero de cuenta a la que desea transferir");
 
+        //meto el valor en el switch para comprobar que la cuenta sea correcta
+        switch (cuentaAmiga) {
+            case "1":
+                cuentaAmiga = cta1;
+                break;
+            case "2":
+                cuentaAmiga = cta2;
+                break;
+            default:
+                alert("Solo puede transferir dinero a una cuenta amiga válida");
+                return false;
+        }
+        // si devuelve true continua ejecutando las funciones, sino retorna false.
+        restaDinero(monto);
+        actualizarSaldoEnPantalla();
+        alert("Se han transferido: $" + monto + "\n" + "Cuenta destino: " + cuentaAmiga[1] );
+
+    } else {
+        alert("No hay saldo disponible para realizar la transferencia");
+    }
 }
 
-function iniciarSesion() {
 
+
+
+//primero compruebo que la clave de seguridad devuelva true y lo dejo entrar
+function iniciarSesion() { 
+if (parseInt(prompt("Ingrese su clave: ")) == codigoDeSeguridad) {
+   alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
+
+} else { //si devuelve false, bloqueo su cuenta
+    saldoCuenta = 0;
+    alert("El codigo ingresado es incorrecto. "+'\n'+
+          "Por cuestiones de seguridad, su saldo ha sido bloqueado");
+    return false;
+    }
 }
+
 
 //Funciones que actualizan el valor de las variables en el HTML
 function cargarNombreEnPantalla() {
