@@ -27,13 +27,17 @@ window.onload = function () {
 
 //Suma dinero a saldoCuenta
 var sumaDinero = function (monto) {
-    saldoAnterior = saldoCuenta;
-    saldoCuenta = saldoAnterior + monto;
+    if (validaValoresNumericos(monto)) {
+        saldoAnterior = saldoCuenta;
+        saldoCuenta = saldoAnterior + monto;
+    } else {
+        return false;
+    }
 }
 
 //Resta dinero a saldoCuenta
 var restaDinero = function (monto) {
-    if (monto <= saldoCuenta) {
+    if (validaValoresNumericos(monto) && monto <= saldoCuenta) {
         saldoAnterior = saldoCuenta;
         saldoCuenta = saldoAnterior - monto;
     } else {
@@ -61,13 +65,14 @@ function haySaldoDisponible(monto) {
     if (monto <= saldoCuenta) {
         return true;
     } else {
+        // alert("No tiene saldo disponible");
         return false;
     }
 }
 
 //verifica que el usuario no retire mas dinero del límite de extracción permitido
 function limExtraccionValido(monto) {
-    if (monto <= limiteExtraccion) {
+    if (monto <= limiteExtraccion && monto <= saldoCuenta) {
         return true;
     } else {
         alert("La cantidad de dinero que deseas extraer es mayor a tu límite de extracción");
@@ -85,21 +90,21 @@ function multiploDe100(monto) {
     }
 }
 
-//Compruebo que el usurio coloque numeros
+//Compruebo que el usuario coloque numeros
 function validaValoresNumericos(monto) {
-    if (isNaN(monto)) {
+    if (!isNaN(monto)) {
+        return true;
+    } else {
         alert("Por favor reintente ingresando un importe válido");
         return false;
-    } else {
-        return true;
     }
 }
 
 //Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
-    var nuevoLimite = prompt("Ingrese nuevo límite de extracción");
+    var nuevoLimite = parseInt(prompt("Ingrese nuevo límite de extracción"));
+
     if (validaValoresNumericos(nuevoLimite)) {
-        var nuevoLimite = parseInt(nuevoLimite);
         limiteExtraccion = nuevoLimite;
         actualizarLimiteEnPantalla();
         alertLimExtraccion(nuevoLimite);
@@ -109,13 +114,14 @@ function cambiarLimiteDeExtraccion() {
 }
 
 function extraerDinero() {
-    var monto = prompt("Ingrese la cantidad de que desea extraer");
-    var monto = parseInt(monto);
+    var monto = parseInt(prompt("Ingrese la cantidad de que desea extraer"));
+
     if (validaValoresNumericos(monto) && haySaldoDisponible(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
         restaDinero(monto);
         actualizarSaldoEnPantalla();
         alertExtraccion(monto, saldoAnterior, saldoCuenta);
     } else {
+        alert("No tiene saldo disponible");
         return false;
     }
 }
@@ -181,35 +187,37 @@ function pagarServicio() {
 function transferirDinero() {
     //Aca se ingresa el monto a trasnferir y se guarda en la variable monto
     var monto = parseInt(prompt("Ingrese el importe a transferir"));
-    // Compruebo si tengo dinero suficiente con el if, si da true, pregunto a a que cuenta va a trasnferir el dinero
-    if (haySaldoDisponible(monto)) {
-        cuentaAmiga = prompt("A qué cuenta amiga desea trasnferir el dinero" + "\n" +
-            "1. " + cta1[0] + ": " + cta1[1] + "\n" +
-            "2. " + cta2[0] + ": " + cta2[1] + "\n" +
-            "Ingrese el numero de cuenta a la que desea transferir");
+    if (validaValoresNumericos(monto)) {
 
-        //meto el valor en el switch para comprobar que la cuenta sea correcta
-        switch (cuentaAmiga) {
-            case "1":
-                cuentaAmiga = cta1;
-                break;
-            case "2":
-                cuentaAmiga = cta2;
-                break;
-            default:
-                alert("Solo puede transferir dinero a una cuenta amiga válida");
-                return false;
+        // Compruebo si tengo dinero suficiente con el if, si da true, pregunto a a que cuenta va a trasnferir el dinero
+        if (haySaldoDisponible(monto)) {
+            cuentaAmiga = prompt("A qué cuenta amiga desea trasnferir el dinero" + "\n" +
+                "1. " + cta1[0] + ": " + cta1[1] + "\n" +
+                "2. " + cta2[0] + ": " + cta2[1] + "\n" +
+                "Ingrese el numero de cuenta a la que desea transferir");
+
+            //meto el valor en el switch para comprobar que la cuenta sea correcta
+            switch (cuentaAmiga) {
+                case "1":
+                    cuentaAmiga = cta1;
+                    break;
+                case "2":
+                    cuentaAmiga = cta2;
+                    break;
+                default:
+                    alert("Solo puede transferir dinero a una cuenta amiga válida");
+                    return false;
+            }
+            // si devuelve true continua ejecutando las funciones, sino retorna false.
+            restaDinero(monto);
+            actualizarSaldoEnPantalla();
+            alert("Se han transferido: $" + monto + "\n" + "Cuenta destino: " + cuentaAmiga[1]);
+
+        } else {
+            alert("No hay saldo disponible para realizar la transferencia");
         }
-        // si devuelve true continua ejecutando las funciones, sino retorna false.
-        restaDinero(monto);
-        actualizarSaldoEnPantalla();
-        alert("Se han transferido: $" + monto + "\n" + "Cuenta destino: " + cuentaAmiga[1]);
-
-    } else {
-        alert("No hay saldo disponible para realizar la transferencia");
     }
 }
-
 
 
 
