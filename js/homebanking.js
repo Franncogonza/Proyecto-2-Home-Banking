@@ -103,7 +103,7 @@ function extraerDinero() {
         actualizarSaldoEnPantalla();
         alertExtraccion(monto, saldoAnterior, saldoCuenta);
     } else {
-        alert("No hay saldo disponible");
+        return false;
     }
 }
 
