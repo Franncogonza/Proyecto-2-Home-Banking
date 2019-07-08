@@ -116,7 +116,8 @@ function cambiarLimiteDeExtraccion() {
 function extraerDinero() {
     var monto = parseInt(prompt("Ingrese la cantidad de que desea extraer"));
 
-    if (validaValoresNumericos(monto) && haySaldoDisponible(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
+    if (validaValoresNumericos(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
+        if(haySaldoDisponible(monto)) {
         restaDinero(monto);
         actualizarSaldoEnPantalla();
         alertExtraccion(monto, saldoAnterior, saldoCuenta);
@@ -125,7 +126,7 @@ function extraerDinero() {
         return false;
     }
 }
-
+}
 function depositarDinero() {
     var monto = parseInt(prompt("Ingrese la cantidad de que desea depositar"));
     if (validaValoresNumericos(monto)) {
