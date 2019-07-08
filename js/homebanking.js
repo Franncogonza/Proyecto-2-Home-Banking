@@ -85,20 +85,33 @@ function multiploDe100(monto) {
     }
 }
 
+//Compruebo que el usurio coloque numeros
+function validaValoresNumericos(monto) {
+    if (isNaN(monto)) {
+        alert("Por favor reintente ingresando un importe válido");
+        return false;
+    } else {
+        return true;
+    }
+}
+
 //Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
     var nuevoLimite = prompt("Ingrese nuevo límite de extracción");
-    var nuevoLimite = parseInt(nuevoLimite);
-    limiteExtraccion = nuevoLimite;
-    actualizarLimiteEnPantalla();
-    alertLimExtraccion(nuevoLimite);
+    if (validaValoresNumericos(nuevoLimite)) {
+        var nuevoLimite = parseInt(nuevoLimite);
+        limiteExtraccion = nuevoLimite;
+        actualizarLimiteEnPantalla();
+        alertLimExtraccion(nuevoLimite);
+    } else {
+        return false;
+    }
 }
-
 
 function extraerDinero() {
     var monto = prompt("Ingrese la cantidad de que desea extraer");
     var monto = parseInt(monto);
-    if (haySaldoDisponible(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
+    if (validaValoresNumericos(monto) && haySaldoDisponible(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
         restaDinero(monto);
         actualizarSaldoEnPantalla();
         alertExtraccion(monto, saldoAnterior, saldoCuenta);
@@ -108,12 +121,15 @@ function extraerDinero() {
 }
 
 function depositarDinero() {
-    var monto = prompt("Ingrese la cantidad de que desea depositar");
-    var monto = parseInt(monto);
-    sumaDinero(monto);
-    saldoAnterior = saldoCuenta;
-    actualizarSaldoEnPantalla();
-    alertDeposito(monto, saldoAnterior, saldoCuenta);
+    var monto = parseInt(prompt("Ingrese la cantidad de que desea depositar"));
+    if (validaValoresNumericos(monto)) {
+        saldoAnterior = saldoCuenta;
+        sumaDinero(monto);
+        actualizarSaldoEnPantalla();
+        alertDeposito(monto, saldoAnterior, saldoCuenta);
+    } else {
+        return false;
+    }
 }
 
 
@@ -147,7 +163,7 @@ function pagarServicio() {
     }
     // asigno  a la variable monto el valor de la variable servicio posicion 1
     monto = servicio[1];
-   //compruebo que haya saldo suficiente, si es true, ejecuta las funciones, muestra el alert y actualiza
+    //compruebo que haya saldo suficiente, si es true, ejecuta las funciones, muestra el alert y actualiza
     if (haySaldoDisponible(monto)) {
         restaDinero(monto);
         alert("Pagaste el siguiente servicio: " + servicio[0] + "." + "\n"
@@ -187,7 +203,7 @@ function transferirDinero() {
         // si devuelve true continua ejecutando las funciones, sino retorna false.
         restaDinero(monto);
         actualizarSaldoEnPantalla();
-        alert("Se han transferido: $" + monto + "\n" + "Cuenta destino: " + cuentaAmiga[1] );
+        alert("Se han transferido: $" + monto + "\n" + "Cuenta destino: " + cuentaAmiga[1]);
 
     } else {
         alert("No hay saldo disponible para realizar la transferencia");
@@ -198,15 +214,15 @@ function transferirDinero() {
 
 
 //primero compruebo que la clave de seguridad devuelva true y lo dejo entrar
-function iniciarSesion() { 
-if (parseInt(prompt("Ingrese su clave: ")) == codigoDeSeguridad) {
-   alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
+function iniciarSesion() {
+    if (parseInt(prompt("Ingrese su clave: ")) == codigoDeSeguridad) {
+        alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
 
-} else { //si devuelve false, bloqueo su cuenta
-    saldoCuenta = 0;
-    alert("El codigo ingresado es incorrecto. "+'\n'+
-          "Por cuestiones de seguridad, su saldo ha sido bloqueado");
-    return false;
+    } else { //si devuelve false, bloqueo su cuenta
+        saldoCuenta = 0;
+        alert("El codigo ingresado es incorrecto. " + '\n' +
+            "Por cuestiones de seguridad, su saldo ha sido bloqueado");
+        return false;
     }
 }
 
