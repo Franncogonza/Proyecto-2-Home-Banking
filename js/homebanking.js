@@ -4,6 +4,9 @@ var nombreUsuario = "Franco Gonzalez";
 var saldoCuenta = 30000;
 var limiteExtraccion = 5000;
 var codigoDeSeguridad = 1234;
+var dolarVenta = 42.6000;
+
+
 //Declaración de variables que contienen precio de los servicios
 var s1 = ["Agua", 350];
 var s2 = ["Luz", 425];
@@ -23,7 +26,10 @@ window.onload = function () {
     actualizarLimiteEnPantalla();
 }
 
+//==============================
 //Funciones creadas por mí
+//==============================
+
 
 //Suma dinero a saldoCuenta
 var sumaDinero = function (monto) {
@@ -60,25 +66,32 @@ function alertLimExtraccion(nuevoLimite) {
     alert('Su nuevo Límite de extracción es: $' + nuevoLimite);
 }
 
+// ===========================================
+//              VALIDACIONES
+//============================================
+
 // Verifica si hay saldo disponible en la cuenta para realizar una operación
 function haySaldoDisponible(monto) {
     if (monto <= saldoCuenta) {
         return true;
     } else {
-        // alert("No tiene saldo disponible");
+        alert("No tiene saldo disponible");
         return false;
     }
 }
 
 //verifica que el usuario no retire mas dinero del límite de extracción permitido
 function limExtraccionValido(monto) {
-    if (monto <= limiteExtraccion && monto <= saldoCuenta) {
+    if (monto <= limiteExtraccion) {
         return true;
     } else {
         alert("La cantidad de dinero que deseas extraer es mayor a tu límite de extracción");
         return false;
     }
 }
+
+
+
 
 //Verifica que el monto a extraer sea múltiplo de 100
 function multiploDe100(monto) {
@@ -90,21 +103,35 @@ function multiploDe100(monto) {
     }
 }
 
-//Compruebo que el usuario coloque numeros
+//Compruebo que el usuario coloque números
 function validaValoresNumericos(monto) {
     if (!isNaN(monto)) {
         return true;
     } else {
-        alert("Por favor reintente ingresando un importe válido");
+        alert("Por favor ingrese un numero");
         return false;
+
     }
 }
 
+//comprueba que el usuario no ingrese numeros negativos
+function numerosNegativos(monto) {
+    if (monto > 0) {
+        return true;
+    } alert("No utilice numeros negativos. Ingrese un valor válido");
+    return false;
+}
+
+//Retorna a la pantalla principal si el usuario presiona cancelar
+
 //Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
-    var nuevoLimite = parseInt(prompt("Ingrese nuevo límite de extracción"));
-
-    if (validaValoresNumericos(nuevoLimite)) {
+    var nuevoLimite = prompt("Ingrese nuevo límite de extracción");
+    if (nuevoLimite === null) {
+        return;
+    }
+    var nuevoLimite = parseInt(nuevoLimite);
+    if (validaValoresNumericos(nuevoLimite) && numerosNegativos(nuevoLimite)) {
         limiteExtraccion = nuevoLimite;
         actualizarLimiteEnPantalla();
         alertLimExtraccion(nuevoLimite);
@@ -114,22 +141,30 @@ function cambiarLimiteDeExtraccion() {
 }
 
 function extraerDinero() {
-    var monto = parseInt(prompt("Ingrese la cantidad de que desea extraer"));
 
-    if (validaValoresNumericos(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
-        if(haySaldoDisponible(monto)) {
-        restaDinero(monto);
-        actualizarSaldoEnPantalla();
-        alertExtraccion(monto, saldoAnterior, saldoCuenta);
-    } else {
-        alert("No tiene saldo disponible");
-        return false;
+    var monto = prompt("Ingrese la cantidad de que desea extraer");
+    if (monto === null) {
+        return;
+    }
+    var monto = parseInt(monto);
+    if (validaValoresNumericos(monto) && numerosNegativos(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
+        if (haySaldoDisponible(monto)) {
+            restaDinero(monto);
+            actualizarSaldoEnPantalla();
+            alertExtraccion(monto, saldoAnterior, saldoCuenta);
+        } else {
+            // alert("No tiene saldo disponible");
+            return false;
+        }
     }
 }
-}
 function depositarDinero() {
-    var monto = parseInt(prompt("Ingrese la cantidad de que desea depositar"));
-    if (validaValoresNumericos(monto)) {
+    var monto = prompt("Ingrese la cantidad de que desea depositar");
+    if (monto === null) {
+        return;
+    }
+    var monto = parseInt(monto);
+    if (validaValoresNumericos(monto) && numerosNegativos(monto)) {
         saldoAnterior = saldoCuenta;
         sumaDinero(monto);
         actualizarSaldoEnPantalla();
@@ -137,7 +172,9 @@ function depositarDinero() {
     } else {
         return false;
     }
+
 }
+
 
 
 function pagarServicio() {
@@ -149,8 +186,14 @@ function pagarServicio() {
         "3. " + s3[0] + ": $" + s3[1] + '\n' +
         "4. " + s4[0] + ": $" + s4[1] + '\n' +
         "Ingrese el numero del servicio que desea abonar");
-
     //si el servicio existe devuelve true sino retorna false
+
+    if (servicio === null) {
+        return;
+    }
+
+   
+
     switch (servicio) {
         case "1":
             servicio = s1;
@@ -187,8 +230,12 @@ function pagarServicio() {
 
 function transferirDinero() {
     //Aca se ingresa el monto a trasnferir y se guarda en la variable monto
-    var monto = parseInt(prompt("Ingrese el importe a transferir"));
-    if (validaValoresNumericos(monto)) {
+    var monto = prompt("Ingrese el importe a transferir");
+    if (monto === null) {
+        return;
+    }
+    var monto = parseInt(monto);
+    if (validaValoresNumericos(monto) && numerosNegativos(monto)) {
 
         // Compruebo si tengo dinero suficiente con el if, si da true, pregunto a a que cuenta va a trasnferir el dinero
         if (haySaldoDisponible(monto)) {
@@ -220,11 +267,33 @@ function transferirDinero() {
     }
 }
 
+function compraDolares() {
+    dolares = prompt("Cuantos dolares quiere comprar");
+    if (dolares === null) {
+        return;
+    }
+    var dolares = parseInt(dolares);
+    monto = dolarVenta * dolares;
+    if (validaValoresNumericos(monto) && numerosNegativos(monto)) {
+        if (haySaldoDisponible(monto)) {
+            restaDinero(monto);
+            alert("Compraste: " + dolares + " $USD " + "a $" + dolarVenta + "\n"
+                + "Saldo anterior: $" + saldoAnterior + "\n"
+                + "Dinero descontado: $" + monto + "\n"
+                + "Saldo actual: $" + saldoCuenta);
+
+            actualizarSaldoEnPantalla();
+        } else {
+            return false;
+        } return false;
+    }
+}
+
 
 
 //primero compruebo que la clave de seguridad devuelva true y lo dejo entrar
 function iniciarSesion() {
-    if (parseInt(prompt("Ingrese su clave: ")) == codigoDeSeguridad) {
+    if (parseInt(prompt("Ingrese su clave: ")) === codigoDeSeguridad) {
         alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
 
     } else { //si devuelve false, bloqueo su cuenta
@@ -248,3 +317,5 @@ function actualizarSaldoEnPantalla() {
 function actualizarLimiteEnPantalla() {
     document.getElementById("limite-extraccion").innerHTML = "Tu límite de extracción es: $" + limiteExtraccion;
 }
+
+
