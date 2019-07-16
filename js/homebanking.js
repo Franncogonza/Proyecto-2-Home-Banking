@@ -223,7 +223,8 @@ function pagarServicio() {
 
         actualizarSaldoEnPantalla();
     } else {
-        alert("No hay saldo disponible");
+        //alert("No hay saldo disponible");
+        return false;
     }
 }
 
