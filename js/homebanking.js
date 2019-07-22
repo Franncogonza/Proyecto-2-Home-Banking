@@ -205,7 +205,7 @@ function pagarServicio() {
         return;
     }
 
-switch (servicio) {
+    switch (servicio) {
         case "1":
             servicio = s1;
             break;
@@ -284,12 +284,12 @@ function compraDolares() {
     if (dolares === null) {
         return;
     }
-   
+
     if (validaValoresNumericos(dolares) && numerosNegativos(dolares) && multiplosDe100(dolares)) {
         monto = dolarVenta * dolares;
         if (haySaldoDisponible(monto)) {
             restaDinero(monto);
-            alert("Compraste: " + dolares + " $USD " + "a $" + dolarVenta + "\n" + "Saldo anterior: $" + saldoAnterior + "\n"+ "Dinero descontado: $" + monto + "\n"+ "Saldo actual: $" + saldoCuenta);
+            alert("Compraste: " + dolares + " $USD " + "a $" + dolarVenta + "\n" + "Saldo anterior: $" + saldoAnterior + "\n" + "Dinero descontado: $" + monto + "\n" + "Saldo actual: $" + saldoCuenta);
 
             actualizarSaldoEnPantalla();
         } else {
@@ -297,8 +297,6 @@ function compraDolares() {
         } return false;
     }
 }
-
-
 
 //primero compruebo que la clave de seguridad devuelva true y lo dejo entrar
 function iniciarSesion() {
