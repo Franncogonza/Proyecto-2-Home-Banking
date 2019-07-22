@@ -3,7 +3,7 @@
 var nombreUsuario = "Franco Gonzalez";
 var saldoCuenta = 30000;
 var limiteExtraccion = 5000;
-var codigoDeSeguridad = 1234;
+var codigoDeSeguridad = "1234";
 var dolarVenta = 42.6000;
 
 
@@ -32,7 +32,7 @@ window.onload = function () {
 
 
 //Suma dinero a saldoCuenta
-var sumaDinero = function (monto) {
+function sumaDinero(monto) {
     if (validaValoresNumericos(monto)) {
         saldoAnterior = saldoCuenta;
         saldoCuenta = saldoAnterior + monto;
@@ -42,7 +42,7 @@ var sumaDinero = function (monto) {
 }
 
 //Resta dinero a saldoCuenta
-var restaDinero = function (monto) {
+function restaDinero(monto) {
     if (validaValoresNumericos(monto) && monto <= saldoCuenta) {
         saldoAnterior = saldoCuenta;
         saldoCuenta = saldoAnterior - monto;
@@ -53,16 +53,19 @@ var restaDinero = function (monto) {
 
 //Muestra un alert después de hacer un depósito
 function alertDeposito(monto, saldoAnterior, saldoCuenta) {
+    monto = parseFloat(monto);
     alert('Has depositado: $' + monto + '\nSaldo Anterior: $' + saldoAnterior + '\nSaldo Actual: $' + saldoCuenta);
 }
 
 //Muestra un alert después de hacer una extracción
 function alertExtraccion(monto, saldoAnterior, saldoCuenta) {
+    monto = parseInt(monto);
     alert('Has retirado: $' + monto + '\nSaldo Anterior: $' + saldoAnterior + '\nSaldo Actual: $' + saldoCuenta);
 }
 
 //Muestra un alert después de cambiar límite de extracción
 function alertLimExtraccion(nuevoLimite) {
+    nuevoLimite = parseInt(nuevoLimite);
     alert('Su nuevo Límite de extracción es: $' + nuevoLimite);
 }
 
@@ -90,9 +93,6 @@ function limExtraccionValido(monto) {
     }
 }
 
-
-
-
 //Verifica que el monto a extraer sea múltiplo de 100
 function multiploDe100(monto) {
     if (monto % 100 == 0) {
@@ -103,8 +103,20 @@ function multiploDe100(monto) {
     }
 }
 
+//Verifica que el nuevo limite de extracción sea multiplo de 100
+function multiplosDe100(monto) {
+    if (monto % 100 == 0) {
+        return true;
+    } else {
+        alert("Ingrese valores múltiplos de 100");
+        return false;
+    }
+}
+
+
 //Compruebo que el usuario coloque números
 function validaValoresNumericos(monto) {
+    monto = Number(monto);
     if (!isNaN(monto)) {
         return true;
     } else {
@@ -118,7 +130,7 @@ function validaValoresNumericos(monto) {
 function numerosNegativos(monto) {
     if (monto > 0) {
         return true;
-    } alert("No utilice numeros negativos. Ingrese un valor válido");
+    } alert("Ingrese un valor válido");
     return false;
 }
 
@@ -130,9 +142,9 @@ function cambiarLimiteDeExtraccion() {
     if (nuevoLimite === null) {
         return;
     }
-    var nuevoLimite = parseInt(nuevoLimite);
-    if (validaValoresNumericos(nuevoLimite) && numerosNegativos(nuevoLimite)) {
-        limiteExtraccion = nuevoLimite;
+
+    if (validaValoresNumericos(nuevoLimite) && numerosNegativos(nuevoLimite) && multiplosDe100(nuevoLimite)) {
+        limiteExtraccion = parseInt(nuevoLimite);
         actualizarLimiteEnPantalla();
         alertLimExtraccion(nuevoLimite);
     } else {
@@ -146,7 +158,6 @@ function extraerDinero() {
     if (monto === null) {
         return;
     }
-    var monto = parseInt(monto);
     if (validaValoresNumericos(monto) && numerosNegativos(monto) && limExtraccionValido(monto) && multiploDe100(monto)) {
         if (haySaldoDisponible(monto)) {
             restaDinero(monto);
@@ -158,14 +169,16 @@ function extraerDinero() {
         }
     }
 }
+
 function depositarDinero() {
     var monto = prompt("Ingrese la cantidad de que desea depositar");
     if (monto === null) {
         return;
     }
-    var monto = parseInt(monto);
+
     if (validaValoresNumericos(monto) && numerosNegativos(monto)) {
         saldoAnterior = saldoCuenta;
+        monto = parseFloat(monto);
         sumaDinero(monto);
         actualizarSaldoEnPantalla();
         alertDeposito(monto, saldoAnterior, saldoCuenta);
@@ -179,7 +192,7 @@ function depositarDinero() {
 
 function pagarServicio() {
 
-    // El usuario debe elegir el servicio que quiere pagar, ese valor se almcena en servicio y entra al switch
+    // El usuario debe elegir el servicio que quiere pagar, ese valor se almacena en servicio y entra al switch
     var servicio = prompt("Que servicio desea abonar?" + '\n' +
         "1. " + s1[0] + ": $" + s1[1] + '\n' +
         "2. " + s2[0] + ": $" + s2[1] + '\n' +
@@ -192,9 +205,7 @@ function pagarServicio() {
         return;
     }
 
-   
-
-    switch (servicio) {
+switch (servicio) {
         case "1":
             servicio = s1;
             break;
@@ -211,7 +222,7 @@ function pagarServicio() {
             alert("Intente con un servicio valido");
             return false;
     }
-    // asigno  a la variable monto el valor de la variable servicio posicion 1
+    // asigno a la variable monto el valor de la variable servicio posicion 1
     monto = servicio[1];
     //compruebo que haya saldo suficiente, si es true, ejecuta las funciones, muestra el alert y actualiza
     if (haySaldoDisponible(monto)) {
@@ -273,15 +284,12 @@ function compraDolares() {
     if (dolares === null) {
         return;
     }
-    var dolares = parseInt(dolares);
-    monto = dolarVenta * dolares;
-    if (validaValoresNumericos(monto) && numerosNegativos(monto)) {
+   
+    if (validaValoresNumericos(dolares) && numerosNegativos(dolares) && multiplosDe100(dolares)) {
+        monto = dolarVenta * dolares;
         if (haySaldoDisponible(monto)) {
             restaDinero(monto);
-            alert("Compraste: " + dolares + " $USD " + "a $" + dolarVenta + "\n"
-                + "Saldo anterior: $" + saldoAnterior + "\n"
-                + "Dinero descontado: $" + monto + "\n"
-                + "Saldo actual: $" + saldoCuenta);
+            alert("Compraste: " + dolares + " $USD " + "a $" + dolarVenta + "\n" + "Saldo anterior: $" + saldoAnterior + "\n"+ "Dinero descontado: $" + monto + "\n"+ "Saldo actual: $" + saldoCuenta);
 
             actualizarSaldoEnPantalla();
         } else {
@@ -294,7 +302,8 @@ function compraDolares() {
 
 //primero compruebo que la clave de seguridad devuelva true y lo dejo entrar
 function iniciarSesion() {
-    if (parseInt(prompt("Ingrese su clave: ")) === codigoDeSeguridad) {
+    var clave = prompt("Ingrese su clave: ");
+    if (clave === codigoDeSeguridad) {
         alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
 
     } else { //si devuelve false, bloqueo su cuenta
