@@ -120,7 +120,7 @@ function validaValoresNumericos(monto) {
     if (!isNaN(monto)) {
         return true;
     } else {
-        alert("Por favor ingrese un numero");
+        alert("Ingrese un valor válido");
         return false;
 
     }
@@ -134,7 +134,15 @@ function numerosNegativos(monto) {
     return false;
 }
 
-//Retorna a la pantalla principal si el usuario presiona cancelar
+//Verifica que el nuevo limite de extracción no sea mayor a 10000
+function topeLimiteExtraccion(monto) {
+    if (monto <= 10000) {
+        return true;
+    } else {
+        alert("El límite de extracción no debe superar los $10000")
+        return false;
+    }
+}
 
 //Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
@@ -143,7 +151,7 @@ function cambiarLimiteDeExtraccion() {
         return;
     }
 
-    if (validaValoresNumericos(nuevoLimite) && numerosNegativos(nuevoLimite) && multiplosDe100(nuevoLimite)) {
+    if (topeLimiteExtraccion(nuevoLimite) && validaValoresNumericos(nuevoLimite) && numerosNegativos(nuevoLimite) && multiplosDe100(nuevoLimite)) {
         limiteExtraccion = parseInt(nuevoLimite);
         actualizarLimiteEnPantalla();
         alertLimExtraccion(nuevoLimite);
@@ -239,7 +247,6 @@ function pagarServicio() {
     }
 }
 
-
 function transferirDinero() {
     //Aca se ingresa el monto a trasnferir y se guarda en la variable monto
     var monto = prompt("Ingrese el importe a transferir");
@@ -298,20 +305,20 @@ function compraDolares() {
     }
 }
 
-//primero compruebo que la clave de seguridad devuelva true y lo dejo entrar
-function iniciarSesion() {
-    var clave = prompt("Ingrese su clave: ");
-    if (clave === codigoDeSeguridad) {
-        alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
 
+//primero compruebo que la clave de seguridad y el usuario devuelva true y lo dejo entrar
+function iniciarSesion() {
+    var usuario = prompt("Ingrese su usuario: ");
+    var clave = prompt("Ingrese su clave: ");
+
+    if (usuario === nombreUsuario && clave === codigoDeSeguridad) {
+        alert("Bienvenido/a " + nombreUsuario + " , ya puedes comenzar a realizar operaciones");
     } else { //si devuelve false, bloqueo su cuenta
         saldoCuenta = 0;
-        alert("El codigo ingresado es incorrecto. " + '\n' +
-            "Por cuestiones de seguridad, su saldo ha sido bloqueado");
+        alert("El codigo ingresado es incorrecto. " + '\n' + "Por cuestiones de seguridad, su saldo ha sido bloqueado");
         return false;
     }
 }
-
 
 //Funciones que actualizan el valor de las variables en el HTML
 function cargarNombreEnPantalla() {
